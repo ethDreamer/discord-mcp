@@ -81,19 +81,40 @@ claude mcp get discord
 
 You should see `Status ✔ Connected`.
 
+## Registering with Codex
+
+Register the server with Codex as a local stdio MCP server:
+
+```bash
+codex mcp add discord -- \
+  /path/to/discord-mcp/.venv/bin/python \
+  /path/to/discord-mcp/server.py
+```
+
+Verify that it is configured:
+
+```bash
+codex mcp get discord
+codex mcp list
+```
+
+Restart Codex or open a new session after adding the server. In the Codex
+terminal UI, run `/mcp` to confirm that `discord` and its
+`read_discord_thread` tool are available.
+
 ## Usage
 
-Once registered, ask Claude things like:
+Once registered, ask Claude or Codex things like:
 
 > "Read this Discord thread: https://discord.com/channels/123/456/789"
 
 > "Summarize the conversation starting at this message: https://discord.com/channels/..."
 
-Claude will call `read_discord_thread` and have access to the message content. For long threads, it can paginate by passing the returned `last_id` as `after_id` in subsequent calls.
+The assistant will call `read_discord_thread` and have access to the message content. For long threads, it can paginate by passing the returned `last_id` as `after_id` in subsequent calls.
 
 ## How it works
 
 - Uses Discord's REST API v10 with your user token
 - Fetches the anchor message via `?around=<id>&limit=1` (the direct endpoint is bot-only)
 - Paginates forward with `?after=<id>&limit=<batch_size>`
-- Runs as a stdio MCP server — Claude Code spawns it as a subprocess when needed
+- Runs as a stdio MCP server — Claude Code or Codex spawns it as a subprocess when needed
