@@ -26,6 +26,10 @@ async def read_discord_thread(
         batch_size: Messages to fetch per call (1-100). Default 50.
 
     Returns a dict with `messages`, `has_more`, and `last_id`.
+
+    Limitation: only messages with text content are returned. Attachment-only,
+    image, voice message, sticker, poll, embed, and thread-starter messages are
+    silently omitted, so the returned thread may have gaps.
     """
     token = os.environ.get("DISCORD_USER_TOKEN", "")
     if not token:
